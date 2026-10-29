@@ -28,3 +28,32 @@ python web-ship-check/scripts/page_check.py http://127.0.0.1:8000/ --widths 1280
 ```
 
 有錯誤或有元素超出畫面時退出碼為 1。找不到 Chrome 時用環境變數 `CHROME` 指定路徑。
+
+## handwritten-notes：手寫筆記 Word 產生器
+
+把習題解答做成「像人手寫」的筆記 Word 檔：橫線筆記紙、藍筆寫過程、紅筆圈題號、紅框標答案。
+
+![範例](handwritten-notes/example.png)
+
+- 繁中手寫字型（[辰宇落雁體](https://github.com/Chenyu-otf/chenyuluoyan_thin)，OFL 1.1），每個字的大小、角度、位置都隨機抖動，不會像打字
+- 支援上標、下標（`10^{-19}`、`q_{1}`），字型缺的符號自動換成手寫時常見的寫法
+- 內建面鏡、透鏡光路圖：照比例畫，光線交點就是公式算出的像；也能用手繪線條工具自己畫圖
+- 一題盡量不跨頁，太長時在 (b)(c) 小題前換頁
+
+### 安裝
+
+```bash
+pip install pillow python-docx fonttools
+git clone https://github.com/a0928077807-sudo/claude-skills.git
+cp -r claude-skills/handwritten-notes ~/.claude/skills/
+```
+
+字型不放在 repo 裡：第一次執行時會自動從原作者的 release 下載（約 9.5 MB），並移除 hinting（不然 Pillow 會出錯），之後就不用再下載。
+
+### 單獨使用
+
+寫一個定義 `NOTES` 的 `content.py`（格式見 [SKILL.md](handwritten-notes/SKILL.md)），然後：
+
+```bash
+python handwritten-notes/scripts/hwnotes.py content.py 筆記.docx --png-dir pages
+```
